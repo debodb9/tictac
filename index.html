@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic Tac Toe</title>
+<style>
+  .body {
+    font-family: cursive, fantasy;
+    
+}
+  .container {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    z-index: 999;
+    
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+    align-content: center;
+    
+  }
+  .cell {
+    width: 100px;
+    height: 100px;
+    border: 2px solid #333;
+    font-size: 48px;
+    cursor: pointer;
+  }
+  .cell:hover {
+    background-color: #f0f0f0;
+  }
+  .winner-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #fff;
+    border: 2px solid #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Tic Tac Toe</h1>
+  <div id="start-screen">
+    <button onclick="startGame()">Start Game</button>
+  </div>
+  <div id="game-screen" style="display: none;">
+    <div class="board" id="board">
+      <div class="cell" onclick="cellClicked(0)"></div>
+      <div class="cell" onclick="cellClicked(1)"></div>
+      <div class="cell" onclick="cellClicked(2)"></div>
+      <div class="cell" onclick="cellClicked(3)"></div>
+      <div class="cell" onclick="cellClicked(4)"></div>
+      <div class="cell" onclick="cellClicked(5)"></div>
+      <div class="cell" onclick="cellClicked(6)"></div>
+      <div class="cell" onclick="cellClicked(7)"></div>
+      <div class="cell" onclick="cellClicked(8)"></div>
+    </div>
+  </div>
+  <div id="winner-popup" class="winner-popup">
+    <h2 id="winner-text"></h2>
+    <button onclick="resetGame()">Play Again</button>
+  </div>
+</div>
+
+<script>
+  let currentPlayer = 'X';
+  let board = ['', '', '', '', '', '', '', '', ''];
+  const winningCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  function startGame() {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'block';
+  }
+
+  function cellClicked(index) {
+    if (!board[index]) {
+      document.getElementById('board').children[index].innerText = currentPlayer;
+      board[index] = currentPlayer;
+      if (checkWinner(currentPlayer)) {
+        showWinnerPopup(currentPlayer);
+      } else if (checkDraw()) {
+        showWinnerPopup('draw');
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      }
+    }
+  }
+
+  function checkWinner(player) {
+    return winningCombinations.some(combination => {
+      return combination.every(index => {
+        return board[index] === player;
+      });
+    });
+  }
+
+  function checkDraw() {
+    return board.every(cell => cell !== '');
+  }
+
+  function showWinnerPopup(player) {
+    const winnerPopup = document.getElementById('winner-popup');
+    if (player === 'draw') {
+      document.getElementById('winner-text').innerText = 'It\'s a draw!';
+    } else {
+      document.getElementById('winner-text').innerText = `Player ${player} wins!`;
+    }
+    winnerPopup.style.display = 'block';
+  }
+
+  function resetGame() {
+    currentPlayer = 'X';
+    board = ['', '', '', '', '', '', '', '', ''];
+    const cells = document.getElementsByClassName('cell');
+    for (let cell of cells) {
+      cell.innerText = '';
+    }
+    document.getElementById('winner-popup').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
+
+ 
